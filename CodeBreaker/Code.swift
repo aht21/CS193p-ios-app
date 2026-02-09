@@ -1,3 +1,17 @@
+//
+//  Code.swift
+//  CodeBreaker
+//
+//  Created by aht21 on 05.02.2026.
+//
+
+import SwiftUI
+
+extension Peg {
+    static let missing = "-"
+}
+
+
 struct Code {
     var kind: Kind
     var pegs: [Peg]
@@ -9,7 +23,7 @@ struct Code {
     
     static let missingPeg: Peg = "-"
     enum Kind: Equatable {
-        case master
+        case master(isHidden: Bool)
         case guess
         case attempt([Match])
         case unknown
@@ -19,6 +33,17 @@ struct Code {
         for index in pegs.indices {
             pegs[index] = pegChoices.randomElement() ?? Code.missingPeg
         }
+    }
+    
+    var isHidden: Bool {
+        switch kind {
+        case .master(let isHidden): return isHidden
+        default: return false
+        }
+    }
+    
+    mutating func reset(pegsCount: Int) {
+        pegs = Array(repeating: Code.missingPeg, count: pegsCount)
     }
     
     var matches: [Match]? {
